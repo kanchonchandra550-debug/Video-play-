@@ -1,0 +1,6 @@
+{
+  "name": "EarnWatch",
+  "description": "Watch videos, complete tasks, claim daily rewards, and withdraw your earnings on a premium glassmorphic dashboard.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

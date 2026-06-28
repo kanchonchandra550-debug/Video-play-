@@ -1,0 +1,1446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>EarnWatch - Watch & Earn Rewards</title>
+    <!-- Tailwind CSS CDN for utility grid and layout -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        premium: {
+                            bg: '#030712',
+                            card: 'rgba(15, 23, 42, 0.45)',
+                            primary: '#3b82f6',
+                            accent: '#10b981',
+                            warning: '#f59e0b',
+                            purple: '#8b5cf6',
+                            border: 'rgba(255, 255, 255, 0.08)',
+                            glow: 'rgba(59, 130, 246, 0.15)'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Google Material Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+    <!-- Custom CSS for specialized premium styling, glassmorphism, animations -->
+    <style>
+        :root {
+            --font-display: 'Space Grotesk', sans-serif;
+            --font-body: 'Plus Jakarta Sans', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: #050B18;
+            color: #f1f5f9;
+            overflow-x: hidden;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            min-height: 100vh;
+            padding-bottom: 80px; /* Space for bottom navigation */
+        }
+
+        .font-display {
+            font-family: var(--font-display);
+        }
+
+        .font-mono {
+            font-family: var(--font-mono);
+        }
+
+        /* Clean Minimalism Glass Cards */
+        .glass-card {
+            background: rgba(15, 23, 42, 0.5);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 24px;
+            box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.2);
+            transition: all 0.25s ease-in-out;
+        }
+
+        .glass-card:hover {
+            border-color: rgba(59, 130, 246, 0.15);
+            box-shadow: 0 8px 30px 0 rgba(59, 130, 246, 0.05);
+        }
+
+        .glass-modal {
+            background: rgba(5, 11, 24, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        /* 3D Premium Title */
+        .title-3d {
+            font-family: var(--font-display);
+            font-weight: 700;
+            background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 50%, #1d4ed8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 1px 4px rgba(59, 130, 246, 0.2);
+            filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.4));
+            letter-spacing: -0.02em;
+        }
+
+        /* Glow effects */
+        .glow-blue {
+            box-shadow: 0 4px 14px rgba(59, 130, 246, 0.2);
+        }
+
+        .glow-green {
+            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.2);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(5, 11, 24, 0.5);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(59, 130, 246, 0.25);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(59, 130, 246, 0.4);
+        }
+
+        /* Dynamic video player placeholder */
+        .video-player-container {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%; /* 16:9 Aspect Ratio */
+            background: #020617;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        /* Bottom Nav M3 Navigation Pill */
+        .nav-pill {
+            position: relative;
+            transition: all 0.2s ease-in-out;
+        }
+        .nav-pill.active .nav-icon {
+            color: #ffffff;
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            transform: scale(1.02);
+        }
+        .nav-pill.active .nav-text {
+            color: #60a5fa;
+            font-weight: 600;
+        }
+
+        /* Animation Keyframes */
+        @keyframes pulse-ring {
+            0% { transform: scale(0.97); opacity: 0.6; }
+            50% { transform: scale(1.03); opacity: 0.3; }
+            100% { transform: scale(0.97); opacity: 0.6; }
+        }
+        .pulse-g {
+            animation: pulse-ring 2.5s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-4px); }
+            100% { transform: translateY(0px); }
+        }
+        .floating-card {
+            animation: float 5s ease-in-out infinite;
+        }
+
+        /* Toast system */
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1000;
+        }
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Safe area support for edge-to-edge layouts */
+        .safe-top {
+            padding-top: env(safe-area-inset-top, 16px);
+        }
+        .safe-bottom {
+            padding-bottom: env(safe-area-inset-bottom, 16px);
+        }
+    </style>
+</head>
+<body class="safe-bottom">
+
+    <!-- Top Status / Branding Bar -->
+    <header class="w-full px-6 py-4 safe-top flex justify-between items-center z-40 relative">
+        <div class="flex items-center gap-2">
+            <span class="material-symbols-rounded text-premium-primary text-3xl pulse-g">monetization_on</span>
+            <span class="font-display font-bold text-xl tracking-tight bg-gradient-to-r from-blue-400 to-indigo-300 bg-clip-text text-transparent">EarnWatch</span>
+        </div>
+        <div class="flex items-center gap-2 bg-slate-900/80 px-3 py-1.5 rounded-full border border-white/10" onclick="switchSection('profile')">
+            <img id="avatar-preview-top" src="https://api.dicebear.com/7.x/bottts/svg?seed=ProEarner&backgroundColor=1e1b4b" alt="Avatar" class="w-6 h-6 rounded-full bg-blue-950">
+            <span id="username-top" class="text-xs font-medium max-w-[80px] truncate">ProEarner</span>
+        </div>
+    </header>
+
+    <!-- App Dynamic Content Sections -->
+    <main class="px-4 py-2 space-y-6 max-w-md mx-auto relative z-30 pb-20">
+
+        <!-- ================= HOME SECTION ================= -->
+        <section id="section-home" class="space-y-6">
+            <!-- Large Hero Section -->
+            <div class="text-center py-6 px-4 space-y-3 relative overflow-hidden rounded-3xl glass-card floating-card">
+                <div class="absolute -top-12 -left-12 w-24 h-24 bg-blue-500/20 rounded-full blur-xl"></div>
+                <div class="absolute -bottom-12 -right-12 w-32 h-32 bg-purple-500/20 rounded-full blur-xl"></div>
+                
+                <span class="text-xs font-semibold tracking-wider text-blue-400 bg-blue-500/10 px-3 py-1 rounded-full border border-blue-500/20 inline-block uppercase">Premium Earning Platform</span>
+                <h1 class="title-3d text-3xl md:text-4xl mt-2 leading-none">Watch Videos &<br>Earn Money</h1>
+                <p class="text-slate-400 text-xs max-w-xs mx-auto">Get rewarded instantly in points and withdraw directly to your bKash or Nagad mobile wallets!</p>
+                
+                <div class="pt-4 flex justify-center gap-4">
+                    <button onclick="switchSection('videos')" class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-semibold text-sm px-6 py-3 rounded-xl glow-blue transition duration-300 flex items-center gap-2">
+                        <span class="material-symbols-rounded text-sm">play_circle</span> Start Watching
+                    </button>
+                    <button onclick="triggerDailyCheckin()" class="bg-slate-800/80 hover:bg-slate-800 text-slate-200 border border-white/10 font-medium text-sm px-4 py-3 rounded-xl transition duration-300 flex items-center gap-2">
+                        <span class="material-symbols-rounded text-sm text-yellow-400">calendar_today</span> Check-in
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stats Dashboard Grid -->
+            <div class="grid grid-cols-2 gap-4">
+                <!-- Total Points Card -->
+                <div class="glass-card p-4 relative overflow-hidden">
+                    <div class="absolute -right-6 -bottom-6 w-16 h-16 bg-blue-500/10 rounded-full flex items-center justify-center">
+                        <span class="material-symbols-rounded text-3xl text-blue-500/20">stars</span>
+                    </div>
+                    <span class="text-xs text-slate-400 font-medium flex items-center gap-1">
+                        <span class="material-symbols-rounded text-sm text-blue-400">stars</span> Total Points
+                    </span>
+                    <h2 id="stat-total-points" class="font-display font-bold text-3xl text-white mt-2 font-mono">0</h2>
+                    <span class="text-[10px] text-emerald-400 font-medium mt-1 inline-block">100% Secure</span>
+                </div>
+
+                <!-- Today's Earnings Card -->
+                <div class="glass-card p-4 relative overflow-hidden">
+                    <div class="absolute -right-6 -bottom-6 w-16 h-16 bg-emerald-500/10 rounded-full flex items-center justify-center">
+                        <span class="material-symbols-rounded text-3xl text-emerald-500/20">payments</span>
+                    </div>
+                    <span class="text-xs text-slate-400 font-medium flex items-center gap-1">
+                        <span class="material-symbols-rounded text-sm text-emerald-400">trending_up</span> Today's Gain
+                    </span>
+                    <h2 id="stat-today-earnings" class="font-display font-bold text-3xl text-emerald-400 mt-2 font-mono">0</h2>
+                    <span class="text-[10px] text-slate-400 mt-1 inline-block">Refreshes daily</span>
+                </div>
+
+                <!-- Withdrawal Balance Card -->
+                <div class="glass-card p-4 col-span-2 relative overflow-hidden flex justify-between items-center">
+                    <div>
+                        <span class="text-xs text-slate-400 font-medium flex items-center gap-1">
+                            <span class="material-symbols-rounded text-sm text-amber-400">wallet</span> Available Balance
+                        </span>
+                        <div class="flex items-baseline gap-2 mt-1">
+                            <h2 id="stat-withdrawable-points" class="font-display font-bold text-2xl text-white font-mono">0</h2>
+                            <span class="text-xs text-slate-400">points</span>
+                            <span class="text-xs text-blue-400 font-medium" id="balance-bdt-equivalent">(= ৳0.00 BDT)</span>
+                        </div>
+                        <span class="text-[10px] text-slate-500 block mt-1">Minimum withdrawal: 100 points (৳10 BDT)</span>
+                    </div>
+                    <button onclick="switchSection('withdraw')" class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-semibold text-xs px-4 py-2.5 rounded-xl glow-green transition duration-200 flex items-center gap-1">
+                        Withdraw <span class="material-symbols-rounded text-xs">arrow_forward</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quick Tutorial / Trust Row -->
+            <div class="glass-card p-4 flex gap-4 items-center bg-gradient-to-r from-blue-950/20 to-indigo-950/20 border border-blue-900/30">
+                <div class="p-2.5 bg-blue-500/10 rounded-full border border-blue-500/20 flex-shrink-0">
+                    <span class="material-symbols-rounded text-blue-400">info</span>
+                </div>
+                <div>
+                    <h4 class="text-xs font-semibold text-white">How it works?</h4>
+                    <p class="text-[11px] text-slate-400 mt-0.5">Watch videos for at least 30 seconds, click claim, and receive 10 points per video instantly. Convert to mobile money wallet bKash/Nagad.</p>
+                </div>
+            </div>
+
+            <!-- Promotion / Ad Space (Dynamic Simulation) -->
+            <div class="rounded-2xl border border-white/5 bg-slate-950/50 p-4 text-center">
+                <span class="text-[9px] font-semibold text-slate-500 tracking-widest uppercase block mb-1">Sponsored Announcement</span>
+                <span class="text-xs text-slate-300 font-medium">Double points weekend! Earn +20% on withdraw limits this Saturday.</span>
+            </div>
+        </section>
+
+        <!-- ================= VIDEOS SECTION ================= -->
+        <section id="section-videos" class="space-y-4 hidden">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h2 class="font-display font-bold text-xl text-white">Available Videos</h2>
+                    <p class="text-xs text-slate-400">Earn 10 points for every video watched for 30s</p>
+                </div>
+                <span class="text-xs bg-blue-500/10 border border-blue-500/20 text-blue-400 px-2.5 py-1 rounded-full font-mono font-bold" id="video-count-badge">0/6 Completed</span>
+            </div>
+
+            <!-- Grid of Videos -->
+            <div class="space-y-4" id="videos-grid-container">
+                <!-- Video Cards will be dynamically injected here to maintain state correctly -->
+            </div>
+        </section>
+
+        <!-- ================= REWARDS & BONUS SECTION ================= -->
+        <section id="section-rewards" class="space-y-6 hidden">
+            <div>
+                <h2 class="font-display font-bold text-xl text-white">Bonus & Daily Tasks</h2>
+                <p class="text-xs text-slate-400 font-medium">Claim free reward tokens periodically to maximize your earnings.</p>
+            </div>
+
+            <!-- Daily Check-In Card -->
+            <div class="glass-card p-6 relative overflow-hidden bg-gradient-to-b from-slate-900/50 to-indigo-950/20">
+                <div class="absolute -top-10 -right-10 w-28 h-28 bg-yellow-500/10 rounded-full blur-2xl"></div>
+                <div class="flex items-start justify-between">
+                    <div class="space-y-1">
+                        <span class="text-[10px] uppercase font-bold tracking-wider text-yellow-400 bg-yellow-500/10 px-2 py-0.5 rounded border border-yellow-500/20">Daily Check-In</span>
+                        <h3 class="font-display font-bold text-lg text-white mt-1">24 Hour Daily Bonus</h3>
+                        <p class="text-xs text-slate-400">Claim 20 free points instantly every single day to keep your streak alive.</p>
+                    </div>
+                    <span class="material-symbols-rounded text-3xl text-yellow-400">military_tech</span>
+                </div>
+
+                <div class="mt-6 flex items-center justify-between gap-4 border-t border-white/5 pt-4">
+                    <div class="text-xs">
+                        <span class="text-slate-400 block">Status</span>
+                        <span id="daily-checkin-status" class="text-emerald-400 font-semibold flex items-center gap-1 mt-0.5">
+                            <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Ready to claim
+                        </span>
+                    </div>
+                    <button id="btn-daily-checkin" onclick="triggerDailyCheckin()" class="bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-400 hover:to-amber-500 text-slate-950 font-bold text-xs px-5 py-3 rounded-xl transition duration-300 flex items-center gap-1.5 glow-yellow">
+                        <span class="material-symbols-rounded text-sm">redeem</span> Claim 20 Points
+                    </button>
+                </div>
+            </div>
+
+            <!-- Reward Multipliers Checklist -->
+            <div class="glass-card p-5 space-y-4">
+                <h3 class="font-display font-bold text-sm text-slate-200">Earning Milestones</h3>
+                
+                <div class="space-y-3">
+                    <!-- Milestone 1 -->
+                    <div class="flex items-center justify-between p-3 bg-slate-900/60 rounded-xl border border-white/5">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-400 text-sm">1</div>
+                            <div>
+                                <h4 class="text-xs font-semibold text-white">Watch First Video</h4>
+                                <p class="text-[10px] text-slate-400">Get started on your earning journey</p>
+                            </div>
+                        </div>
+                        <span id="milestone-1-status" class="material-symbols-rounded text-emerald-400 text-lg">check_circle</span>
+                    </div>
+
+                    <!-- Milestone 2 -->
+                    <div class="flex items-center justify-between p-3 bg-slate-900/60 rounded-xl border border-white/5">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-purple-500/10 flex items-center justify-center text-purple-400 text-sm">3</div>
+                            <div>
+                                <h4 class="text-xs font-semibold text-white">Watch 3 Videos</h4>
+                                <p class="text-[10px] text-slate-400">Become an active daily viewer</p>
+                            </div>
+                        </div>
+                        <span id="milestone-2-status" class="material-symbols-rounded text-slate-500 text-lg">radio_button_unchecked</span>
+                    </div>
+
+                    <!-- Milestone 3 -->
+                    <div class="flex items-center justify-between p-3 bg-slate-900/60 rounded-xl border border-white/5">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-amber-500/10 flex items-center justify-center text-amber-400 text-sm">6</div>
+                            <div>
+                                <h4 class="text-xs font-semibold text-white">Complete All Videos</h4>
+                                <p class="text-[10px] text-slate-400">Claim 60+ points from daily pool</p>
+                            </div>
+                        </div>
+                        <span id="milestone-3-status" class="material-symbols-rounded text-slate-500 text-lg">radio_button_unchecked</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= WITHDRAW SECTION ================= -->
+        <section id="section-withdraw" class="space-y-6 hidden">
+            <div>
+                <h2 class="font-display font-bold text-xl text-white">Secure Withdrawals</h2>
+                <p class="text-xs text-slate-400 font-medium">Cash out your rewards seamlessly directly to bKash or Nagad accounts.</p>
+            </div>
+
+            <!-- Current Wallet Overview -->
+            <div class="glass-card p-4 flex justify-between items-center bg-gradient-to-r from-slate-950 to-blue-950/40">
+                <div>
+                    <span class="text-[10px] uppercase font-bold text-slate-400">Convertible Balance</span>
+                    <h3 id="withdraw-available-points" class="font-display font-bold text-2xl text-white font-mono mt-0.5">0 <span class="text-sm font-sans text-slate-400">points</span></h3>
+                </div>
+                <div class="text-right">
+                    <span class="text-[10px] uppercase font-bold text-emerald-400">Payout Equivalent</span>
+                    <h3 id="withdraw-bdt-value" class="font-display font-bold text-xl text-emerald-400 font-mono mt-0.5">৳0.00 BDT</h3>
+                </div>
+            </div>
+
+            <!-- Withdrawal Form -->
+            <div class="glass-card p-5 space-y-4">
+                <h3 class="font-display font-semibold text-sm text-slate-200">New Withdrawal Request</h3>
+                
+                <div class="space-y-3">
+                    <!-- Method Selector -->
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Select Payment Provider</label>
+                        <div class="grid grid-cols-2 gap-3">
+                            <button id="btn-provider-bkash" onclick="selectProvider('bKash')" class="flex items-center justify-center gap-2 py-3 px-4 rounded-xl border border-pink-500/30 bg-pink-500/5 hover:bg-pink-500/10 text-pink-400 text-sm font-semibold transition">
+                                <span class="w-2.5 h-2.5 rounded-full bg-pink-500"></span> bKash
+                            </button>
+                            <button id="btn-provider-nagad" onclick="selectProvider('Nagad')" class="flex items-center justify-center gap-2 py-3 px-4 rounded-xl border border-orange-500/10 bg-transparent text-slate-400 text-sm font-semibold transition">
+                                <span class="w-2.5 h-2.5 rounded-full bg-transparent"></span> Nagad
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Phone Number Input -->
+                    <div>
+                        <label id="phone-label" class="block text-xs font-medium text-slate-400 mb-1">bKash Mobile Number</label>
+                        <div class="relative">
+                            <span class="material-symbols-rounded absolute left-3 top-3.5 text-slate-500 text-lg">phone_iphone</span>
+                            <input type="tel" id="input-phone" placeholder="e.g. 017XXXXXXXX" class="w-full pl-10 pr-4 py-3 bg-slate-950/80 border border-white/10 rounded-xl text-white text-sm font-mono placeholder:text-slate-600 focus:outline-none focus:border-blue-500 transition">
+                        </div>
+                        <span class="text-[10px] text-slate-500 mt-1 block">Enter your 11-digit Bangladeshi mobile wallet number.</span>
+                    </div>
+
+                    <!-- Points to Withdraw -->
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Points to Withdraw</label>
+                        <div class="relative">
+                            <span class="material-symbols-rounded absolute left-3 top-3.5 text-slate-500 text-lg">token</span>
+                            <input type="number" id="input-amount" placeholder="Minimum 100 points" class="w-full pl-10 pr-24 py-3 bg-slate-950/80 border border-white/10 rounded-xl text-white text-sm font-mono placeholder:text-slate-600 focus:outline-none focus:border-blue-500 transition" oninput="updateWithdrawalCalculation()">
+                            <div class="absolute right-2 top-2 flex items-center gap-1.5">
+                                <button onclick="setWithdrawMax()" class="bg-slate-800 text-xs font-semibold px-2.5 py-1.5 rounded-lg border border-white/5 hover:bg-slate-700 transition">MAX</button>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center mt-1">
+                            <span class="text-[10px] text-slate-500" id="withdraw-points-conversion">10 Points = ৳1.00 BDT</span>
+                            <span class="text-[10px] text-emerald-400 font-medium" id="withdraw-calculation-bdt">Estimated: ৳0.00 BDT</span>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button onclick="submitWithdrawal()" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-semibold py-3.5 rounded-xl transition duration-300 mt-2 flex items-center justify-center gap-2 glow-blue">
+                        <span class="material-symbols-rounded text-sm">lock</span> Submit Withdrawal
+                    </button>
+                </div>
+            </div>
+
+            <!-- Withdrawal History List -->
+            <div class="glass-card p-5 space-y-4">
+                <div class="flex justify-between items-center">
+                    <h3 class="font-display font-semibold text-sm text-slate-200">Withdrawal History</h3>
+                    <span class="text-[10px] text-slate-500">Live Status Tracker</span>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-white/5 text-[10px] uppercase font-bold text-slate-500 tracking-wider">
+                                <th class="py-2">Date</th>
+                                <th class="py-2">Method</th>
+                                <th class="py-2">Amount</th>
+                                <th class="py-2 text-right">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="withdraw-history-body" class="text-xs text-slate-300 divide-y divide-white/5">
+                            <!-- Injected dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= LEADERBOARD SECTION ================= -->
+        <section id="section-leaderboard" class="space-y-4 hidden">
+            <div>
+                <h2 class="font-display font-bold text-xl text-white">Top Earners</h2>
+                <p class="text-xs text-slate-400">Join the elite rank of top earners active this week.</p>
+            </div>
+
+            <!-- Podium Visuals -->
+            <div class="grid grid-cols-3 gap-3 pt-6 pb-2 items-end">
+                <!-- 2nd Place -->
+                <div class="glass-card p-3 text-center space-y-1 bg-gradient-to-t from-slate-900/90 to-indigo-950/20 order-1 relative">
+                    <div class="absolute -top-5 left-1/2 -translate-x-1/2">
+                        <div class="w-10 h-10 rounded-full border-2 border-slate-400 overflow-hidden bg-slate-900">
+                            <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Nabila&backgroundColor=475569" alt="User" class="w-full h-full">
+                        </div>
+                        <span class="absolute -bottom-1 right-0 bg-slate-400 text-[10px] text-slate-950 font-bold w-4 h-4 rounded-full flex items-center justify-center">2</span>
+                    </div>
+                    <div class="h-4"></div>
+                    <h4 class="text-xs font-semibold text-white truncate mt-1">Nabila</h4>
+                    <span class="text-[10px] font-mono text-blue-400 font-bold">1,850 pts</span>
+                </div>
+
+                <!-- 1st Place (Center / Tallest) -->
+                <div class="glass-card p-4 text-center space-y-1 bg-gradient-to-t from-blue-950 to-indigo-950/30 border-blue-500/40 order-2 relative scale-105 shadow-xl">
+                    <div class="absolute -top-7 left-1/2 -translate-x-1/2">
+                        <span class="material-symbols-rounded text-yellow-400 text-lg absolute -top-4 left-1/2 -translate-x-1/2 drop-shadow">workspace_premium</span>
+                        <div class="w-12 h-12 rounded-full border-2 border-yellow-500 overflow-hidden bg-blue-950">
+                            <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Asif&backgroundColor=fbbf24" alt="User" class="w-full h-full">
+                        </div>
+                        <span class="absolute -bottom-1 right-0 bg-yellow-500 text-[10px] text-slate-950 font-bold w-4 h-4 rounded-full flex items-center justify-center">1</span>
+                    </div>
+                    <div class="h-5"></div>
+                    <h4 class="text-xs font-bold text-white truncate mt-1">Asif Ahmed</h4>
+                    <span class="text-xs font-mono text-emerald-400 font-bold">2,410 pts</span>
+                    <span class="text-[9px] uppercase tracking-wider text-yellow-400 block font-semibold">Elite King</span>
+                </div>
+
+                <!-- 3rd Place -->
+                <div class="glass-card p-3 text-center space-y-1 bg-gradient-to-t from-slate-900/90 to-indigo-950/20 order-3 relative">
+                    <div class="absolute -top-5 left-1/2 -translate-x-1/2">
+                        <div class="w-10 h-10 rounded-full border-2 border-amber-600 overflow-hidden bg-slate-900">
+                            <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Faisal&backgroundColor=b45309" alt="User" class="w-full h-full">
+                        </div>
+                        <span class="absolute -bottom-1 right-0 bg-amber-600 text-[10px] text-slate-950 font-bold w-4 h-4 rounded-full flex items-center justify-center">3</span>
+                    </div>
+                    <div class="h-4"></div>
+                    <h4 class="text-xs font-semibold text-white truncate mt-1">Faisal</h4>
+                    <span class="text-[10px] font-mono text-blue-400 font-bold">1,520 pts</span>
+                </div>
+            </div>
+
+            <!-- Remainder of list -->
+            <div class="glass-card p-4 divide-y divide-white/5 space-y-3">
+                <!-- Rank 4 -->
+                <div class="flex items-center justify-between pt-2">
+                    <div class="flex items-center gap-3">
+                        <span class="text-slate-500 font-mono text-xs w-4 text-center">4</span>
+                        <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Tanvir" alt="User" class="w-8 h-8 rounded-full bg-slate-800 border border-white/5">
+                        <span class="text-xs font-semibold text-slate-200">Tanvir Hassan</span>
+                    </div>
+                    <span class="text-xs font-mono text-slate-400">1,240 pts</span>
+                </div>
+                <!-- Rank 5 -->
+                <div class="flex items-center justify-between pt-2">
+                    <div class="flex items-center gap-3">
+                        <span class="text-slate-500 font-mono text-xs w-4 text-center">5</span>
+                        <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Mim" alt="User" class="w-8 h-8 rounded-full bg-slate-800 border border-white/5">
+                        <span class="text-xs font-semibold text-slate-200">Mim Akter</span>
+                    </div>
+                    <span class="text-xs font-mono text-slate-400">980 pts</span>
+                </div>
+                <!-- Rank 6 -->
+                <div class="flex items-center justify-between pt-2">
+                    <div class="flex items-center gap-3">
+                        <span class="text-slate-500 font-mono text-xs w-4 text-center">6</span>
+                        <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Kanchon" alt="User" class="w-8 h-8 rounded-full bg-slate-800 border border-white/5">
+                        <span class="text-xs font-semibold text-slate-200" id="leaderboard-user-username">ProEarner (You)</span>
+                    </div>
+                    <span class="text-xs font-mono text-emerald-400 font-bold" id="leaderboard-user-points">0 pts</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= PROFILE SECTION ================= -->
+        <section id="section-profile" class="space-y-6 hidden">
+            <div>
+                <h2 class="font-display font-bold text-xl text-white">Your Profile</h2>
+                <p class="text-xs text-slate-400">Manage your earning profile and security configurations.</p>
+            </div>
+
+            <!-- Profile Details Form -->
+            <div class="glass-card p-6 text-center space-y-4 relative overflow-hidden bg-gradient-to-b from-slate-900 to-indigo-950/20">
+                <div class="absolute -top-12 left-1/2 -translate-x-1/2 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl"></div>
+                
+                <div class="relative w-24 h-24 mx-auto">
+                    <img id="avatar-preview-profile" src="https://api.dicebear.com/7.x/bottts/svg?seed=ProEarner&backgroundColor=1e1b4b" alt="Profile" class="w-full h-full rounded-full border-2 border-blue-500/40 bg-slate-950 shadow-inner">
+                    <button onclick="randomizeAvatar()" class="absolute bottom-0 right-0 w-8 h-8 bg-blue-600 hover:bg-blue-500 text-white rounded-full flex items-center justify-center border border-white/10 shadow-lg transition">
+                        <span class="material-symbols-rounded text-sm">refresh</span>
+                    </button>
+                </div>
+
+                <div class="space-y-1">
+                    <h3 id="profile-text-username" class="font-display font-bold text-lg text-white">ProEarner</h3>
+                    <p class="text-xs text-slate-400">Premium Watcher Level <span class="text-blue-400 font-bold" id="profile-user-level">1</span></p>
+                </div>
+
+                <!-- XP Progress Bar -->
+                <div class="space-y-1.5 text-left pt-2">
+                    <div class="flex justify-between text-[10px] text-slate-400 font-medium">
+                        <span>XP Progress</span>
+                        <span id="profile-xp-text">0 / 100 XP</span>
+                    </div>
+                    <div class="w-full h-2 bg-slate-950 rounded-full overflow-hidden border border-white/5">
+                        <div id="profile-xp-bar" class="h-full bg-gradient-to-r from-blue-500 to-purple-500" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Edit Username Card -->
+            <div class="glass-card p-5 space-y-3">
+                <h3 class="font-display font-semibold text-sm text-slate-200">Personal Configurations</h3>
+                <div class="space-y-3">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Earning Username</label>
+                        <div class="relative">
+                            <span class="material-symbols-rounded absolute left-3 top-3.5 text-slate-500 text-lg">person</span>
+                            <input type="text" id="input-username" placeholder="Enter username" class="w-full pl-10 pr-4 py-3 bg-slate-950/80 border border-white/10 rounded-xl text-white text-sm focus:outline-none focus:border-blue-500 transition">
+                        </div>
+                    </div>
+                    <button onclick="saveProfileChanges()" class="w-full bg-slate-800 hover:bg-slate-700 text-white border border-white/10 font-semibold py-3 rounded-xl transition text-xs flex items-center justify-center gap-1.5">
+                        <span class="material-symbols-rounded text-sm">save</span> Save Configurations
+                    </button>
+                </div>
+            </div>
+
+            <!-- Earning Stats Breakdown -->
+            <div class="glass-card p-5 space-y-4">
+                <h3 class="font-display font-semibold text-sm text-slate-200">Historical Statistics</h3>
+                <div class="grid grid-cols-2 gap-3 text-center">
+                    <div class="p-3 bg-slate-950/50 rounded-xl border border-white/5">
+                        <span class="text-[10px] text-slate-500 block">Total Videos Watched</span>
+                        <span id="profile-stat-watched" class="font-display font-bold text-lg text-white mt-0.5">0</span>
+                    </div>
+                    <div class="p-3 bg-slate-950/50 rounded-xl border border-white/5">
+                        <span class="text-[10px] text-slate-500 block">Bonus Points Claimed</span>
+                        <span id="profile-stat-bonus" class="font-display font-bold text-lg text-white mt-0.5">0</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ================= PREMIUM INTEGRATED VIDEO PLAYER MODAL ================= -->
+    <div id="player-modal" class="fixed inset-0 z-50 glass-modal hidden flex flex-col justify-between items-center px-4 py-6 safe-top safe-bottom">
+        <!-- Close Warning Bar -->
+        <div class="w-full flex justify-between items-center max-w-md">
+            <div class="flex items-center gap-2">
+                <span class="material-symbols-rounded text-rose-500 animate-pulse text-base">emergency_home</span>
+                <span class="text-[11px] font-semibold text-rose-400">Do not exit! Watching required to earn rewards.</span>
+            </div>
+            <button onclick="closePlayerWithWarning()" class="text-slate-400 hover:text-white bg-white/5 p-1.5 rounded-full hover:bg-white/10 transition">
+                <span class="material-symbols-rounded text-lg">close</span>
+            </button>
+        </div>
+
+        <!-- Video Player Body -->
+        <div class="w-full max-w-md space-y-6 flex-grow flex flex-col justify-center">
+            <div class="space-y-2 text-center">
+                <h3 id="player-video-title" class="font-display font-bold text-lg text-white">Simulated Learning Stream</h3>
+                <span class="text-[10px] bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 px-2.5 py-1 rounded-full font-bold inline-block">Reward Pool: 10 Points</span>
+            </div>
+
+            <!-- High-Tech Animated Video Simulation (Canvas + Web Audio fallback) -->
+            <div class="video-player-container shadow-2xl relative">
+                <!-- Glowing Play/Pause Center Indicator -->
+                <div id="player-video-play-overlay" class="absolute inset-0 bg-black/60 flex flex-col items-center justify-center gap-3 z-10 transition duration-300">
+                    <button onclick="startSimulatedPlayback()" class="w-16 h-16 bg-blue-600 text-white rounded-full flex items-center justify-center glow-blue hover:bg-blue-500 transition scale-105 active:scale-95">
+                        <span class="material-symbols-rounded text-3xl">play_arrow</span>
+                    </button>
+                    <p class="text-xs font-semibold text-slate-300">Tap to start watching and activate point system</p>
+                </div>
+
+                <!-- Simulation Canvas -->
+                <canvas id="video-simulation-canvas" class="absolute inset-0 w-full h-full object-cover"></canvas>
+
+                <!-- Timer countdown floating overlay -->
+                <div class="absolute top-4 right-4 bg-slate-950/80 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/10 flex items-center gap-1.5 z-20">
+                    <span class="material-symbols-rounded text-sm text-blue-400 animate-spin" id="timer-icon">timer</span>
+                    <span id="player-countdown-text" class="text-xs font-mono font-bold text-white">30s</span>
+                </div>
+
+                <!-- Streaming Status Badge -->
+                <div class="absolute bottom-4 left-4 bg-emerald-500/90 text-slate-950 text-[10px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1 z-20">
+                    <span class="w-1.5 h-1.5 bg-slate-950 rounded-full animate-ping"></span> LIVE SYNCING
+                </div>
+            </div>
+
+            <!-- Video Player Dashboard Controls -->
+            <div class="glass-card p-4 space-y-4">
+                <div class="flex justify-between items-center">
+                    <div class="space-y-0.5">
+                        <span class="text-[10px] uppercase font-bold text-slate-500">Video Progress</span>
+                        <h4 id="player-progress-status-text" class="text-xs font-semibold text-amber-400 flex items-center gap-1">
+                            <span class="material-symbols-rounded text-sm text-amber-400">pending</span> Waiting for playback
+                        </h4>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-[10px] uppercase font-bold text-slate-500">Points Unlocked</span>
+                        <h4 id="player-claimable-points-status" class="text-xs font-bold text-slate-400 font-mono">0 / 10</h4>
+                    </div>
+                </div>
+
+                <!-- Reward Progress Bar -->
+                <div class="w-full h-2.5 bg-slate-950 rounded-full overflow-hidden border border-white/5">
+                    <div id="player-reward-progress-bar" class="h-full bg-gradient-to-r from-amber-500 to-emerald-500" style="width: 0%"></div>
+                </div>
+
+                <!-- Big Claim Reward Action Button -->
+                <button id="btn-claim-reward" onclick="claimVideoReward()" disabled class="w-full bg-slate-800 text-slate-500 font-bold py-3.5 rounded-xl transition duration-300 flex items-center justify-center gap-2 cursor-not-allowed">
+                    <span class="material-symbols-rounded text-sm">lock</span> Complete 30s to Claim 10 Points
+                </button>
+            </div>
+        </div>
+
+        <!-- Safe margins footer in modal -->
+        <p class="text-[10px] text-slate-500">Authorized watch-to-earn nodes only. Security active.</p>
+    </div>
+
+    <!-- ================= INFORMATIONAL MODALS ================= -->
+    <div id="info-modal" class="fixed inset-0 z-50 glass-modal hidden flex items-center justify-center p-4">
+        <div class="glass-card p-6 w-full max-w-sm space-y-4">
+            <h3 id="info-modal-title" class="font-display font-bold text-lg text-white">Title</h3>
+            <p id="info-modal-content" class="text-xs text-slate-300 leading-relaxed">Content goes here...</p>
+            <button onclick="closeInfoModal()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 rounded-xl transition text-xs">Close</button>
+        </div>
+    </div>
+
+    <!-- ================= FLOATING TOAST SYSTEM ================= -->
+    <div id="toast-box" class="toast flex items-center gap-2.5 bg-slate-900 border border-white/10 px-4 py-3 rounded-full shadow-2xl">
+        <span id="toast-icon" class="material-symbols-rounded text-blue-400 text-lg">info</span>
+        <span id="toast-text" class="text-xs text-white font-medium">Notification message</span>
+    </div>
+
+    <!-- ================= PREMIUM BOTTOM NAVIGATION ================= -->
+    <nav class="fixed bottom-0 left-0 right-0 z-40 bg-slate-950/90 backdrop-blur-md border-t border-white/10 flex justify-around items-center py-2 px-1 safe-bottom">
+        <!-- Home -->
+        <button id="nav-home" onclick="switchSection('home')" class="nav-pill active flex flex-col items-center gap-1 py-1 px-3">
+            <div class="nav-icon px-5 py-1.5 rounded-full text-slate-400 hover:text-slate-200 flex items-center justify-center">
+                <span class="material-symbols-rounded text-xl">home</span>
+            </div>
+            <span class="nav-text text-[10px]">Home</span>
+        </button>
+
+        <!-- Videos -->
+        <button id="nav-videos" onclick="switchSection('videos')" class="nav-pill flex flex-col items-center gap-1 py-1 px-3">
+            <div class="nav-icon px-5 py-1.5 rounded-full text-slate-400 hover:text-slate-200 flex items-center justify-center">
+                <span class="material-symbols-rounded text-xl">play_circle</span>
+            </div>
+            <span class="nav-text text-[10px]">Videos</span>
+        </button>
+
+        <!-- Rewards -->
+        <button id="nav-rewards" onclick="switchSection('rewards')" class="nav-pill flex flex-col items-center gap-1 py-1 px-3">
+            <div class="nav-icon px-5 py-1.5 rounded-full text-slate-400 hover:text-slate-200 flex items-center justify-center">
+                <span class="material-symbols-rounded text-xl">redeem</span>
+            </div>
+            <span class="nav-text text-[10px]">Rewards</span>
+        </button>
+
+        <!-- Withdraw -->
+        <button id="nav-withdraw" onclick="switchSection('withdraw')" class="nav-pill flex flex-col items-center gap-1 py-1 px-3">
+            <div class="nav-icon px-5 py-1.5 rounded-full text-slate-400 hover:text-slate-200 flex items-center justify-center">
+                <span class="material-symbols-rounded text-xl">account_balance_wallet</span>
+            </div>
+            <span class="nav-text text-[10px]">Withdraw</span>
+        </button>
+
+        <!-- Profile -->
+        <button id="nav-profile" onclick="switchSection('profile')" class="nav-pill flex flex-col items-center gap-1 py-1 px-3">
+            <div class="nav-icon px-5 py-1.5 rounded-full text-slate-400 hover:text-slate-200 flex items-center justify-center">
+                <span class="material-symbols-rounded text-xl">person</span>
+            </div>
+            <span class="nav-text text-[10px]">Profile</span>
+        </button>
+    </nav>
+
+    <!-- Footer Terms / Privacy Links inside Profile / Bottom-most space -->
+    <footer class="w-full text-center py-6 mt-8 border-t border-white/5 space-y-2">
+        <p class="text-[10px] text-slate-500">&copy; 2026 EarnWatch Premium. All rights reserved.</p>
+        <div class="flex justify-center gap-4 text-[10px] text-slate-400">
+            <button onclick="showInfoModal('Terms of Service', 'Welcome to EarnWatch. By utilizing our mobile application platform, you agree to watch the designated videos without automated assistance or third-party emulators. Only one account per physical device is permitted. Abuse of points claims or mock transactions will lead to an immediate system banning. Withdrawals are processed daily directly to bKash and Nagad mobile money handlers.')" class="hover:underline">Terms of Service</button>
+            <span>&bull;</span>
+            <button onclick="showInfoModal('Privacy Policy', 'EarnWatch prioritizes user data encryption and security. Your account details, local state parameters, mobile payout details, and watch history records are stored securely on-device within Android Encrypted Storage. We do not sell or lease user metadata to secondary data brokers.')" class="hover:underline">Privacy Policy</button>
+        </div>
+    </footer>
+
+    <!-- ================= CORE APPLICATION JAVASCRIPT ENGINE ================= -->
+    <script>
+        // Data Schema and Initial Mock Video Database
+        const initialVideos = [
+            { id: 'vid_1', category: 'Tech Reviews', title: 'Top 5 Smartphone Innovations in 2026', points: 10, duration: 30, thumbnailHue: 210 },
+            { id: 'vid_2', category: 'ASMR Gaming', title: 'Unreal Engine 6 Forest Walkthrough Scene', points: 10, duration: 30, thumbnailHue: 150 },
+            { id: 'vid_3', category: 'Finance Insights', title: 'Decentralized Finance Explained For Beginners', points: 10, duration: 30, thumbnailHue: 280 },
+            { id: 'vid_4', category: 'Creative Coding', title: 'How To Build High Performance WebGL Canvas Loops', points: 10, duration: 30, thumbnailHue: 330 },
+            { id: 'vid_5', category: 'Nature & Zen', title: '30 Minutes of Relaxing Rain on Glass Soundscapes', points: 10, duration: 30, thumbnailHue: 40 },
+            { id: 'vid_6', category: 'Mobile Dev', title: 'Why Jetpack Compose is the Future of Android UI', points: 10, duration: 30, thumbnailHue: 190 }
+        ];
+
+        // Global Application State Manager
+        let appState = {
+            username: 'ProEarner',
+            totalPoints: 0,
+            todayEarnings: 0,
+            withdrawals: [],
+            claimedVideos: {}, // Key: videoId, Value: timestamp
+            lastCheckin: 0, // Timestamp
+            selectedProvider: 'bKash' // default
+        };
+
+        // Active Playback State Trackers
+        let activeVideo = null;
+        let playbackTimer = null;
+        let playbackSecondsLeft = 30;
+        let isPlaybackPlaying = false;
+        let canvasAnimationId = null;
+
+        // On Load Initializer
+        window.onload = function() {
+            loadStateFromStorage();
+            renderVideosGrid();
+            renderWithdrawalHistory();
+            updateDashboardDOM();
+            startCanvasBackgroundAnimation();
+        };
+
+        // Local Storage Helpers
+        function loadStateFromStorage() {
+            const saved = localStorage.getItem('earnwatch_app_state_v1');
+            if (saved) {
+                try {
+                    appState = JSON.parse(saved);
+                } catch (e) {
+                    console.error("Error parsing saved state: ", e);
+                }
+            } else {
+                // Initialize default demo withdrawals
+                appState.withdrawals = [
+                    { date: '2026-06-25', method: 'bKash', account: '01712345678', amount: 150, status: 'Completed' },
+                    { date: '2026-06-26', method: 'Nagad', account: '01987654321', amount: 100, status: 'Completed' }
+                ];
+                saveStateToStorage();
+            }
+        }
+
+        function saveStateToStorage() {
+            localStorage.setItem('earnwatch_app_state_v1', JSON.stringify(appState));
+        }
+
+        // Section Switching (Navigation Engine)
+        function switchSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('main > section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            // Show target
+            document.getElementById(`section-${sectionId}`).classList.remove('hidden');
+
+            // Handle Nav active states
+            document.querySelectorAll('nav > button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById(`nav-${sectionId}`).classList.add('active');
+
+            // Scroll back to top smoothly
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // Specific UI update triggers
+            if (sectionId === 'rewards') {
+                updateRewardsSectionDOM();
+            } else if (sectionId === 'withdraw') {
+                updateWithdrawalSectionDOM();
+            } else if (sectionId === 'profile') {
+                updateProfileSectionDOM();
+            }
+        }
+
+        // Live DOM Updates
+        function updateDashboardDOM() {
+            document.getElementById('stat-total-points').innerText = appState.totalPoints.toLocaleString();
+            document.getElementById('stat-today-earnings').innerText = `+${appState.todayEarnings.toLocaleString()}`;
+            document.getElementById('stat-withdrawable-points').innerText = appState.totalPoints.toLocaleString();
+            
+            // conversion rate: 10 points = 1 BDT
+            const bdtEquiv = (appState.totalPoints / 10).toFixed(2);
+            document.getElementById('balance-bdt-equivalent').innerText = `(= ৳${bdtEquiv} BDT)`;
+            
+            // Profile top headers
+            document.getElementById('username-top').innerText = appState.username;
+            document.getElementById('avatar-preview-top').src = `https://api.dicebear.com/7.x/bottts/svg?seed=${appState.username}&backgroundColor=1e1b4b`;
+
+            // Calculate total videos finished
+            const finishedCount = Object.keys(appState.claimedVideos).length;
+            document.getElementById('video-count-badge').innerText = `${finishedCount}/${initialVideos.length} Completed`;
+        }
+
+        // Render Available Videos Feed
+        function renderVideosGrid() {
+            const container = document.getElementById('videos-grid-container');
+            container.innerHTML = '';
+
+            initialVideos.forEach(vid => {
+                const isClaimed = appState.claimedVideos[vid.id] !== undefined;
+                const lockOverlay = isClaimed ? 
+                    `<div class="absolute inset-0 bg-slate-950/80 backdrop-blur-sm rounded-2xl flex flex-col items-center justify-center gap-1.5 z-10 transition">
+                        <span class="material-symbols-rounded text-emerald-400 text-3xl">task_alt</span>
+                        <span class="text-xs font-bold text-white uppercase tracking-wider">Already Claimed</span>
+                        <span class="text-[9px] text-slate-400">Claimed +${vid.points} pts</span>
+                     </div>` : '';
+
+                const watchBtn = isClaimed ? 
+                    `<button disabled class="w-full bg-slate-900 border border-white/5 text-slate-500 font-medium py-2.5 rounded-xl text-xs">Completed</button>` :
+                    `<button onclick="openVideoPlayer('${vid.id}')" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-semibold py-2.5 rounded-xl text-xs transition duration-200 flex items-center justify-center gap-1.5">
+                        <span class="material-symbols-rounded text-sm">play_circle</span> Watch & Earn Points
+                     </button>`;
+
+                const cardHTML = `
+                    <div class="glass-card p-4 relative overflow-hidden flex flex-col justify-between min-h-[220px]">
+                        ${lockOverlay}
+                        <!-- Visual Gradient Header Mockup Thumbnail -->
+                        <div class="relative w-full h-24 rounded-xl overflow-hidden mb-3 flex items-center justify-center" style="background: linear-gradient(135deg, hsl(${vid.thumbnailHue}, 70%, 15%) 0%, hsl(${vid.thumbnailHue}, 70%, 5%) 100%)">
+                            <div class="absolute -right-4 -bottom-4 w-12 h-12 rounded-full blur-xl bg-white/10"></div>
+                            <span class="material-symbols-rounded text-white/20 text-4xl">video_library</span>
+                            <span class="absolute top-2 left-2 bg-slate-950/80 text-[9px] text-slate-300 px-2 py-0.5 rounded font-bold uppercase tracking-wider">${vid.category}</span>
+                            <span class="absolute bottom-2 right-2 bg-blue-600/90 text-[9px] text-white px-2 py-0.5 rounded font-bold uppercase tracking-wider font-mono">+10 Points</span>
+                        </div>
+
+                        <!-- Video Title details -->
+                        <div class="space-y-1 mb-3">
+                            <h3 class="text-xs font-bold text-white line-clamp-2 leading-tight">${vid.title}</h3>
+                            <div class="flex items-center gap-1.5 text-[10px] text-slate-400 font-medium">
+                                <span class="material-symbols-rounded text-[11px] text-blue-400">timer</span> Required Watch: 30s
+                            </div>
+                        </div>
+
+                        <!-- Footer Watch Button -->
+                        ${watchBtn}
+                    </div>
+                `;
+                container.innerHTML += cardHTML;
+            });
+        }
+
+        // Rewards Section logic & Streak Milestones
+        function updateRewardsSectionDOM() {
+            // Update Check-In Timer Countdown live
+            updateDailyCheckinTimer();
+
+            const finishedCount = Object.keys(appState.claimedVideos).length;
+            
+            // Milestone updates
+            const mile1 = document.getElementById('milestone-1-status');
+            const mile2 = document.getElementById('milestone-2-status');
+            const mile3 = document.getElementById('milestone-3-status');
+
+            if (finishedCount >= 1) {
+                mile1.innerText = 'check_circle';
+                mile1.className = 'material-symbols-rounded text-emerald-400 text-lg';
+            } else {
+                mile1.innerText = 'radio_button_unchecked';
+                mile1.className = 'material-symbols-rounded text-slate-500 text-lg';
+            }
+
+            if (finishedCount >= 3) {
+                mile2.innerText = 'check_circle';
+                mile2.className = 'material-symbols-rounded text-emerald-400 text-lg';
+            } else {
+                mile2.innerText = 'radio_button_unchecked';
+                mile2.className = 'material-symbols-rounded text-slate-500 text-lg';
+            }
+
+            if (finishedCount >= 6) {
+                mile3.innerText = 'check_circle';
+                mile3.className = 'material-symbols-rounded text-emerald-400 text-lg';
+            } else {
+                mile3.innerText = 'radio_button_unchecked';
+                mile3.className = 'material-symbols-rounded text-slate-500 text-lg';
+            }
+        }
+
+        function updateDailyCheckinTimer() {
+            const btn = document.getElementById('btn-daily-checkin');
+            const statusText = document.getElementById('daily-checkin-status');
+            const now = Date.now();
+            const last = appState.lastCheckin || 0;
+            const diff = now - last;
+            const period = 24 * 60 * 60 * 1000; // 24 hours in ms
+
+            if (diff >= period) {
+                btn.disabled = false;
+                btn.className = "bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-400 hover:to-amber-500 text-slate-950 font-bold text-xs px-5 py-3 rounded-xl transition duration-300 flex items-center gap-1.5 glow-yellow";
+                btn.innerHTML = `<span class="material-symbols-rounded text-sm">redeem</span> Claim 20 Points`;
+                statusText.innerHTML = `<span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Ready to claim`;
+            } else {
+                btn.disabled = true;
+                btn.className = "bg-slate-800 text-slate-500 border border-white/5 font-semibold text-xs px-5 py-3 rounded-xl cursor-not-allowed flex items-center gap-1.5";
+                
+                // Calculate time left
+                const left = period - diff;
+                const hours = Math.floor(left / (1000 * 60 * 60));
+                const mins = Math.floor((left % (1000 * 60 * 60)) / (1000 * 60));
+                const secs = Math.floor((left % (1000 * 60)) / 1000);
+                
+                btn.innerHTML = `<span class="material-symbols-rounded text-sm">schedule</span> Unlocks in ${hours}h ${mins}m`;
+                statusText.innerHTML = `<span class="inline-block w-2 h-2 rounded-full bg-rose-500"></span> Locked (Next claim tomorrow)`;
+                
+                setTimeout(updateDailyCheckinTimer, 1000);
+            }
+        }
+
+        function triggerDailyCheckin() {
+            const now = Date.now();
+            const last = appState.lastCheckin || 0;
+            const diff = now - last;
+            const period = 24 * 60 * 60 * 1000;
+
+            if (diff >= period) {
+                appState.totalPoints += 20;
+                appState.todayEarnings += 20;
+                appState.lastCheckin = now;
+                saveStateToStorage();
+                updateDashboardDOM();
+                updateRewardsSectionDOM();
+                showToast("redeem", "Daily check-in successful! +20 Points added to balance.", "green");
+            } else {
+                showToast("error", "Daily bonus already claimed. Please return tomorrow!", "red");
+            }
+        }
+
+        // Withdrawal Section Logic
+        function updateWithdrawalSectionDOM() {
+            document.getElementById('withdraw-available-points').innerHTML = `${appState.totalPoints.toLocaleString()} <span class="text-sm font-sans text-slate-400">points</span>`;
+            const equiv = (appState.totalPoints / 10).toFixed(2);
+            document.getElementById('withdraw-bdt-value').innerText = `৳${equiv} BDT`;
+            updateWithdrawalCalculation();
+        }
+
+        function selectProvider(provider) {
+            appState.selectedProvider = provider;
+            const btnBkash = document.getElementById('btn-provider-bkash');
+            const btnNagad = document.getElementById('btn-provider-nagad');
+            const label = document.getElementById('phone-label');
+
+            if (provider === 'bKash') {
+                btnBkash.className = "flex items-center justify-center gap-2 py-3 px-4 rounded-xl border border-pink-500/30 bg-pink-500/5 hover:bg-pink-500/10 text-pink-400 text-sm font-semibold transition";
+                btnBkash.querySelector('span').className = "w-2.5 h-2.5 rounded-full bg-pink-500";
+                btnNagad.className = "flex items-center justify-center gap-2 py-3 px-4 rounded-xl border border-slate-800 bg-transparent text-slate-400 text-sm font-semibold transition";
+                btnNagad.querySelector('span').className = "w-2.5 h-2.5 rounded-full bg-transparent";
+                label.innerText = 'bKash Mobile Number';
+            } else {
+                btnNagad.className = "flex items-center justify-center gap-2 py-3 px-4 rounded-xl border border-orange-500/30 bg-orange-500/5 hover:bg-orange-500/10 text-orange-400 text-sm font-semibold transition";
+                btnNagad.querySelector('span').className = "w-2.5 h-2.5 rounded-full bg-orange-500";
+                btnBkash.className = "flex items-center justify-center gap-2 py-3 px-4 rounded-xl border border-slate-800 bg-transparent text-slate-400 text-sm font-semibold transition";
+                btnBkash.querySelector('span').className = "w-2.5 h-2.5 rounded-full bg-transparent";
+                label.innerText = 'Nagad Mobile Number';
+            }
+        }
+
+        function updateWithdrawalCalculation() {
+            const inputVal = document.getElementById('input-amount').value;
+            const pts = parseInt(inputVal) || 0;
+            const bdt = (pts / 10).toFixed(2);
+            document.getElementById('withdraw-calculation-bdt').innerText = `Estimated: ৳${bdt} BDT`;
+        }
+
+        function setWithdrawMax() {
+            document.getElementById('input-amount').value = appState.totalPoints;
+            updateWithdrawalCalculation();
+        }
+
+        function submitWithdrawal() {
+            const phone = document.getElementById('input-phone').value.trim();
+            const pointsVal = document.getElementById('input-amount').value;
+            const pointsToWithdraw = parseInt(pointsVal) || 0;
+
+            // Validations
+            if (pointsToWithdraw < 100) {
+                showToast("warning", "Minimum withdrawal threshold is 100 points.", "yellow");
+                return;
+            }
+            if (pointsToWithdraw > appState.totalPoints) {
+                showToast("error", "Insufficient points balance for this transaction.", "red");
+                return;
+            }
+            // Bangladeshi mobile number validation (11 digits, starts with 01)
+            const mobileRegex = /^01[3-9]\d{8}$/;
+            if (!mobileRegex.test(phone)) {
+                showToast("error", "Enter a valid 11-digit Bangladeshi mobile wallet number (e.g. 017XXXXXXXX).", "red");
+                return;
+            }
+
+            // Deduct Points
+            appState.totalPoints -= pointsToWithdraw;
+            
+            // Log transaction
+            const dateStr = new Date().toISOString().split('T')[0];
+            const newTx = {
+                date: dateStr,
+                method: appState.selectedProvider,
+                account: phone,
+                amount: pointsToWithdraw,
+                status: 'Pending'
+            };
+            appState.withdrawals.unshift(newTx);
+            saveStateToStorage();
+
+            // Clear Form
+            document.getElementById('input-phone').value = '';
+            document.getElementById('input-amount').value = '';
+
+            // Update UI
+            updateDashboardDOM();
+            updateWithdrawalSectionDOM();
+            renderWithdrawalHistory();
+            showToast("verified", "Withdrawal submitted successfully! Pending approvals.", "green");
+        }
+
+        function renderWithdrawalHistory() {
+            const tbody = document.getElementById('withdraw-history-body');
+            tbody.innerHTML = '';
+
+            if (appState.withdrawals.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="py-4 text-center text-slate-500 text-xs">No transaction records found.</td></tr>`;
+                return;
+            }
+
+            appState.withdrawals.forEach(tx => {
+                const statusColor = tx.status === 'Completed' ? 'text-emerald-400' : 'text-amber-400';
+                const statusIcon = tx.status === 'Completed' ? 'done_all' : 'hourglass_empty';
+                const rowHTML = `
+                    <tr class="hover:bg-white/[0.02]">
+                        <td class="py-3 font-mono text-[10px] text-slate-400">${tx.date}</td>
+                        <td class="py-3 font-medium">${tx.method}<br><span class="text-[9px] text-slate-500 font-mono">${tx.account}</span></td>
+                        <td class="py-3 font-mono font-bold text-white">${tx.amount} pts<br><span class="text-[9px] text-slate-400">৳${(tx.amount/10).toFixed(2)}</span></td>
+                        <td class="py-3 text-right">
+                            <span class="${statusColor} font-semibold inline-flex items-center gap-1 text-[10px]">
+                                <span class="material-symbols-rounded text-xs">${statusIcon}</span> ${tx.status}
+                            </span>
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += rowHTML;
+            });
+        }
+
+        // Profile Section Operations
+        function updateProfileSectionDOM() {
+            document.getElementById('profile-text-username').innerText = appState.username;
+            document.getElementById('input-username').value = appState.username;
+            document.getElementById('avatar-preview-profile').src = `https://api.dicebear.com/7.x/bottts/svg?seed=${appState.username}&backgroundColor=1e1b4b`;
+
+            // Statistics totals
+            const totalWatched = Object.keys(appState.claimedVideos).length;
+            document.getElementById('profile-stat-watched').innerText = totalWatched;
+            
+            // Bonus counted dynamically (total points - videos finished count * 10)
+            const bonusEarned = (appState.lastCheckin ? 20 : 0);
+            document.getElementById('profile-stat-bonus').innerText = bonusEarned;
+
+            // Calculate Level & XP
+            const xp = appState.todayEarnings + (totalWatched * 10);
+            const level = Math.floor(xp / 100) + 1;
+            const xpProgress = xp % 100;
+
+            document.getElementById('profile-user-level').innerText = level;
+            document.getElementById('profile-xp-text').innerText = `${xpProgress} / 100 XP`;
+            document.getElementById('profile-xp-bar').style.width = `${xpProgress}%`;
+
+            // Update leaderboard user text
+            document.getElementById('leaderboard-user-username').innerText = `${appState.username} (You)`;
+            document.getElementById('leaderboard-user-points').innerText = `${appState.totalPoints.toLocaleString()} pts`;
+        }
+
+        function saveProfileChanges() {
+            const rawUser = document.getElementById('input-username').value.trim();
+            if (rawUser.length < 3) {
+                showToast("error", "Username must contain at least 3 characters.", "red");
+                return;
+            }
+            appState.username = rawUser;
+            saveStateToStorage();
+            updateDashboardDOM();
+            updateProfileSectionDOM();
+            showToast("person", "Configurations saved successfully!", "green");
+        }
+
+        function randomizeAvatar() {
+            const tempSeed = Math.random().toString(36).substring(7);
+            document.getElementById('input-username').value = tempSeed;
+            saveProfileChanges();
+        }
+
+        // ================= PLAYBACK & TIMER ENGINE =================
+        function openVideoPlayer(videoId) {
+            const vid = initialVideos.find(v => v.id === videoId);
+            if (!vid) return;
+
+            // Confirm is not already claimed
+            if (appState.claimedVideos[videoId]) {
+                showToast("warning", "Points already claimed for this video stream.", "yellow");
+                return;
+            }
+
+            activeVideo = vid;
+            playbackSecondsLeft = 30;
+            isPlaybackPlaying = false;
+
+            // Reset modal DOM state
+            document.getElementById('player-video-title').innerText = vid.title;
+            document.getElementById('player-countdown-text').innerText = `${playbackSecondsLeft}s`;
+            document.getElementById('player-video-play-overlay').classList.remove('hidden');
+            
+            document.getElementById('player-progress-status-text').innerHTML = `<span class="material-symbols-rounded text-sm text-amber-400">pending</span> Waiting for playback`;
+            document.getElementById('player-progress-status-text').className = "text-xs font-semibold text-amber-400 flex items-center gap-1";
+            
+            document.getElementById('player-claimable-points-status').innerText = `0 / 10`;
+            document.getElementById('player-reward-progress-bar').style.width = '0%';
+
+            const claimBtn = document.getElementById('btn-claim-reward');
+            claimBtn.disabled = true;
+            claimBtn.className = "w-full bg-slate-800 text-slate-500 font-bold py-3.5 rounded-xl transition duration-300 flex items-center justify-center gap-2 cursor-not-allowed";
+            claimBtn.innerHTML = `<span class="material-symbols-rounded text-sm">lock</span> Complete 30s to Claim 10 Points`;
+
+            // Show player modal
+            document.getElementById('player-modal').classList.remove('hidden');
+
+            // Draw initial static frame on canvas
+            drawSimulatedVideoFrame(vid.thumbnailHue, 0);
+        }
+
+        function startSimulatedPlayback() {
+            if (isPlaybackPlaying) return;
+            isPlaybackPlaying = true;
+
+            // Hide Play Overlay
+            document.getElementById('player-video-play-overlay').classList.add('hidden');
+
+            // Update playback progress texts
+            document.getElementById('player-progress-status-text').innerHTML = `<span class="material-symbols-rounded text-sm text-blue-400 animate-spin">sync</span> Stream syncing...`;
+            document.getElementById('player-progress-status-text').className = "text-xs font-semibold text-blue-400 flex items-center gap-1";
+
+            // Start timer countdown interval
+            playbackTimer = setInterval(() => {
+                if (playbackSecondsLeft > 0) {
+                    playbackSecondsLeft--;
+                    document.getElementById('player-countdown-text').innerText = `${playbackSecondsLeft}s`;
+                    
+                    // Update progress bars
+                    const pct = ((30 - playbackSecondsLeft) / 30) * 100;
+                    document.getElementById('player-reward-progress-bar').style.width = `${pct}%`;
+                    document.getElementById('player-claimable-points-status').innerText = `${Math.floor(pct / 10)} / 10`;
+
+                    if (playbackSecondsLeft === 0) {
+                        clearInterval(playbackTimer);
+                        playbackTimer = null;
+                        unlockRewardClaimState();
+                    }
+                }
+            }, 1000);
+
+            // Trigger procedural canvas drawing
+            runProceduralVideoRender();
+            showToast("play_circle", "Video playing. Complete 30 seconds to redeem points.", "blue");
+        }
+
+        function unlockRewardClaimState() {
+            document.getElementById('player-progress-status-text').innerHTML = `<span class="material-symbols-rounded text-sm text-emerald-400 animate-pulse">check_circle</span> Stream complete! Claim ready`;
+            document.getElementById('player-progress-status-text').className = "text-xs font-semibold text-emerald-400 flex items-center gap-1";
+            document.getElementById('player-claimable-points-status').innerText = `10 / 10`;
+            document.getElementById('player-reward-progress-bar').style.width = `100%`;
+
+            const claimBtn = document.getElementById('btn-claim-reward');
+            claimBtn.disabled = false;
+            claimBtn.className = "w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-extrabold py-3.5 rounded-xl transition duration-300 flex items-center justify-center gap-2 glow-green animate-bounce";
+            claimBtn.innerHTML = `<span class="material-symbols-rounded text-sm">redeem</span> Claim 10 Rewards Points Now`;
+        }
+
+        function claimVideoReward() {
+            if (!activeVideo) return;
+
+            // Safety check
+            if (playbackSecondsLeft > 0) {
+                showToast("warning", "You must watch the full 30 seconds before claiming points.", "yellow");
+                return;
+            }
+
+            // Update app state
+            appState.totalPoints += 10;
+            appState.todayEarnings += 10;
+            appState.claimedVideos[activeVideo.id] = Date.now();
+            saveStateToStorage();
+
+            // Notify and reset player
+            showToast("verified", "Reward Claimed! +10 Points added successfully.", "green");
+            closePlayerModal();
+
+            // Update all views
+            updateDashboardDOM();
+            renderVideosGrid();
+        }
+
+        function closePlayerWithWarning() {
+            if (playbackSecondsLeft > 0 && playbackSecondsLeft < 30) {
+                if (confirm("Exiting now will cancel playback rewards. Are you sure you want to stop earning points?")) {
+                    closePlayerModal();
+                }
+            } else {
+                closePlayerModal();
+            }
+        }
+
+        function closePlayerModal() {
+            // Clean intervals and animation loops
+            if (playbackTimer) {
+                clearInterval(playbackTimer);
+                playbackTimer = null;
+            }
+            if (canvasAnimationId) {
+                cancelAnimationFrame(canvasAnimationId);
+                canvasAnimationId = null;
+            }
+            isPlaybackPlaying = false;
+            activeVideo = null;
+
+            document.getElementById('player-modal').classList.add('hidden');
+        }
+
+        // ================= WEB CANVAS ANIMATIONS ENGINE =================
+        function drawSimulatedVideoFrame(hue, time) {
+            const canvas = document.getElementById('video-simulation-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            
+            // Match canvas coordinates to responsive bounds
+            if (canvas.width !== canvas.clientWidth || canvas.height !== canvas.clientHeight) {
+                canvas.width = canvas.clientWidth;
+                canvas.height = canvas.clientHeight;
+            }
+
+            const w = canvas.width;
+            const h = canvas.height;
+
+            // Clear Background
+            ctx.fillStyle = '#020617';
+            ctx.fillRect(0, 0, w, h);
+
+            // Draw glowing tech space patterns (radial gradient)
+            const gradient = ctx.createRadialGradient(w/2, h/2, 10, w/2, h/2, Math.max(w, h)/1.2);
+            gradient.addColorStop(0, `hsla(${hue}, 80%, 20%, 0.35)`);
+            gradient.addColorStop(0.5, `hsla(${hue + 40}, 80%, 10%, 0.1)`);
+            gradient.addColorStop(1, '#020617');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, w, h);
+
+            // Draw a spinning digital network matrix or rings
+            ctx.strokeStyle = `hsla(${hue}, 100%, 60%, 0.15)`;
+            ctx.lineWidth = 1.5;
+            for (let i = 1; i <= 4; i++) {
+                ctx.beginPath();
+                ctx.arc(w/2, h/2, i * (w/10) + Math.sin(time / 20 + i) * 10, 0, Math.PI * 2);
+                ctx.stroke();
+            }
+
+            // Draw visualizer bars reactive to "time" (simulated frequencies)
+            const barCount = 18;
+            const barW = (w * 0.7) / barCount;
+            const barG = 4;
+            const startX = (w - (barCount * (barW + barG))) / 2;
+
+            for (let i = 0; i < barCount; i++) {
+                const noise = Math.sin(time / 8 + i * 0.6) * Math.cos(time / 15 + i * 0.3);
+                const barH = 15 + Math.abs(noise) * (h * 0.45);
+                
+                const gradientBar = ctx.createLinearGradient(0, h/2 - barH/2, 0, h/2 + barH/2);
+                gradientBar.addColorStop(0, `hsla(${hue - 20}, 100%, 65%, 0.9)`);
+                gradientBar.addColorStop(1, `hsla(${hue + 40}, 100%, 50%, 0.4)`);
+
+                ctx.fillStyle = gradientBar;
+                ctx.beginPath();
+                ctx.roundRect(startX + i * (barW + barG), h/2 - barH/2, barW, barH, 4);
+                ctx.fill();
+            }
+
+            // Draw decorative grid lines
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.02)';
+            ctx.lineWidth = 1;
+            const gridS = 30;
+            for (let x = 0; x < w; x += gridS) {
+                ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+            }
+            for (let y = 0; y < h; y += gridS) {
+                ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+            }
+        }
+
+        let runTime = 0;
+        function runProceduralVideoRender() {
+            if (!isPlaybackPlaying) return;
+            
+            const hue = activeVideo ? activeVideo.thumbnailHue : 200;
+            runTime++;
+            
+            drawSimulatedVideoFrame(hue, runTime);
+            canvasAnimationId = requestAnimationFrame(runProceduralVideoRender);
+        }
+
+        // Global ambient decorative backdrop particle lines
+        function startCanvasBackgroundAnimation() {
+            // Optional premium subtle backdrop logic if desired.
+        }
+
+        // Toast Messages Trigger
+        function showToast(icon, text, color) {
+            const box = document.getElementById('toast-box');
+            const iconElem = document.getElementById('toast-icon');
+            const textElem = document.getElementById('toast-text');
+
+            iconElem.innerText = icon;
+            textElem.innerText = text;
+
+            // Set dynamic themes
+            if (color === 'green') {
+                box.className = "toast flex items-center gap-2.5 bg-emerald-950/90 border border-emerald-500/30 px-5 py-3.5 rounded-full shadow-2xl glow-green";
+                iconElem.className = "material-symbols-rounded text-emerald-400 text-lg";
+            } else if (color === 'yellow') {
+                box.className = "toast flex items-center gap-2.5 bg-amber-950/90 border border-amber-500/30 px-5 py-3.5 rounded-full shadow-2xl";
+                iconElem.className = "material-symbols-rounded text-amber-400 text-lg";
+            } else if (color === 'red') {
+                box.className = "toast flex items-center gap-2.5 bg-rose-950/90 border border-rose-500/30 px-5 py-3.5 rounded-full shadow-2xl";
+                iconElem.className = "material-symbols-rounded text-rose-400 text-lg";
+            } else {
+                box.className = "toast flex items-center gap-2.5 bg-slate-900/90 border border-white/10 px-5 py-3.5 rounded-full shadow-2xl glow-blue";
+                iconElem.className = "material-symbols-rounded text-blue-400 text-lg";
+            }
+
+            box.classList.add('show');
+
+            // Autohide after 3 seconds
+            setTimeout(() => {
+                box.classList.remove('show');
+            }, 3000);
+        }
+
+        // Informational Modals
+        function showInfoModal(title, content) {
+            document.getElementById('info-modal-title').innerText = title;
+            document.getElementById('info-modal-content').innerText = content;
+            document.getElementById('info-modal').classList.remove('hidden');
+        }
+
+        function closeInfoModal() {
+            document.getElementById('info-modal').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
